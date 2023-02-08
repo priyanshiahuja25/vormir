@@ -1,0 +1,37 @@
+body {
+  font-family: "DM Sans", sans-serif;
+  background-color: white;
+  height: 350px;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+}
+
+.submission-container {
+  width: 450px;
+  padding: 0 1rem 1rem 1rem;
+  border: solid gray 1px;
+  border-radius: 0.5rem;
+  margin: 20px;
+}
+
+.submission-head {
+  display: flex;
+  align-items: center;
+}
+
+.submission-avatar {
+  height: 40px;
+  border-radius: 50%;
+}
+
+.submission-username {
+  color: gray;
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin-left: 10px;
+}
+
+.content {
+  font-size: 1.5rem;
+}

@@ -1,7 +1,8 @@
-from moviepy.editor import *
+# from moviepy.editor import *
 import praw
-from dotenv import load_dotenv
 import os
+from dotenv import load_dotenv
+from html2image import Html2Image
 
 load_dotenv()
 
@@ -16,21 +17,53 @@ class VideoContent:
 
     def add_comment(self, comment):
         if isinstance(comment, Comment):
-            self.comments.append(Comment)
+            self.comments.append(comment)
             return True
         else:
             print("Invalid Object Type, Should Be Of Type Comment")
             return False
 
+    def make_images(self):
+        path = os.path.join(os.getcwd(), VideoContent.make_folder(self.submission_id), 'images')
+        os.mkdir(path)
+        print(path)
+        hti = Html2Image(output_path=path, custom_flags=['--virtual-time-budget=1000', '--hide-scrollbars'])
+        hti.size = (500, 350)
+        
+        for comment in self.comments:
+            try:
+                hti.screenshot(html_file='assets/reddit_comment.html', css_file='assets/reddit_comment.css', save_as=f'{comment.comment_id}.png')
+            except Exception as e:
+                print(e)
+                print("Some Error Occurred")
+
+        hti.size = (550, 400)
+        hti.screenshot(html_file='assets/reddit_title.html', css_file='assets/reddit_title.css', save_as='title.png')
+
+    @staticmethod
+    def make_folder(submission_id):
+        i = 0
+        while True:
+            try:
+                if i == 0:
+                    path = submission_id
+                else:
+                    path = f"{submission_id} ({i})"
+                os.mkdir(path)
+                break
+            except FileExistsError:
+                i += 1
+
+        return path
+
     def __str__(self):
-        print(type(self.title))
         return f"{self.title} \n- Comments {len(self.comments)}"
 
 
 class Comment:
     def __init__(self, comment_id, body, score):
-        self.comment_id = comment_id,
-        self.body = body,
+        self.comment_id = comment_id
+        self.body = body
         self.score = score
 
     def __str__(self):
@@ -59,10 +92,6 @@ def get_reddit_data(url):
     return video_content
 
 
-def make_video(video_content):
-    pass
-
-
 def main():
     url_to_post = input("URL To Post: ")
     video_content = get_reddit_data(url_to_post)
@@ -71,7 +100,7 @@ def main():
         print("Error In Getting Data")
         exit()
 
-    make_video(video_content)
+    video_content.make_images()
 
 
 if __name__ == "__main__":

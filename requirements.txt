@@ -1,3 +1,4 @@
 praw
 moviepy
 python_dotenv
+html2image  
