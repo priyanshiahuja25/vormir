@@ -3,3 +3,4 @@ moviepy
 python_dotenv
 html2image
 gTTS
+bs4
