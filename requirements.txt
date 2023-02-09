@@ -1,4 +1,5 @@
 praw
 moviepy
 python_dotenv
-html2image  
+html2image
+gTTS
