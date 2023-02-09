@@ -1,4 +1,3 @@
-# from moviepy.editor import *
 import praw
 import os
 from dotenv import load_dotenv
@@ -42,6 +41,7 @@ def main():
 
     video_content.make_images()
     video_content.make_audio()
+    video_content.make_video()
 
 
 if __name__ == "__main__":

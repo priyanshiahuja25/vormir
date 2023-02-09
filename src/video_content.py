@@ -2,6 +2,7 @@ from .comment import Comment
 from html2image import Html2Image
 import os
 from gtts import gTTS, gTTSError
+from moviepy.editor import *
 
 
 class VideoContent:
@@ -22,7 +23,7 @@ class VideoContent:
             return False
 
     def make_images(self):
-        path = os.path.join(os.getcwd(), self.submission_id, 'images')
+        path = os.path.join(os.getcwd(), self.path, 'images')
         os.mkdir(path)
 
         hti = Html2Image(output_path=path, custom_flags=['--virtual-time-budget=1000', '--hide-scrollbars'])
@@ -41,7 +42,7 @@ class VideoContent:
             print("Some Error Occurred")
 
     def make_audio(self):
-        path = os.path.join(os.getcwd(), self.submission_id, 'audio')
+        path = os.path.join(os.getcwd(), self.path, 'audio')
         os.mkdir(path)
 
         language = 'en'
@@ -57,6 +58,27 @@ class VideoContent:
         except gTTSError:
             print("Error In Making Audio")
             exit()
+
+    def make_video(self):
+        # Make Image Clips
+        clips = []
+        for comment in self.comments:
+            comment_audio = AudioFileClip(filename=os.path.join(self.path, 'audio', f'{comment.comment_id}.mp3'),
+                                          fps=44100)
+            clips.append(ImageClip(os.path.join(self.path, 'images', f'{comment.comment_id}.png'))
+                         .set_duration(t=comment_audio.duration).set_audio(comment_audio))
+
+        # Make title clip
+        comment_audio = AudioFileClip(filename=os.path.join(self.path, 'audio', f'title.mp3'),
+                                      fps=44100)
+        clips.insert(0,
+                     ImageClip(os.path.join(self.path, 'images', f'title.png')).set_duration(t=comment_audio.duration+2)
+                     .set_audio(comment_audio))
+
+        # Make the actual Video
+        # print(clips)
+        concat_clip = concatenate_videoclips(clips, method="compose")
+        concat_clip.write_videofile(os.path.join(self.path, "main.mp4"), fps=24)
 
     @staticmethod
     def make_folder(submission_id):
