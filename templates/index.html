@@ -5,11 +5,8 @@ Vormir - Video Generator
 {% endblock %}
 
 {% block content %}
-    <div class="text-[#9ca19e]">
-        <h1 class="text-center text-white font-bold text-3xl md:text-4xl">Vormir - Video Generator</h1>
-        <form class="text-center">
-            <input class="text-xl border-2 border-[#9ca19e] w-full bg-[#1e2228] md:w-2/4 p-4 rounded-lg" type="text" placeholder="enter the post URL">
-            <button type="submit"><img src="/static/images/right-arrow.svg"></button>
-        </form>
-    </div>
+    <form action="/make" method="GET">
+        <input type="text" name="url" placeholder="enter reddit url">
+        <button type="submit">Submit</button>
+    </form>
 {% endblock %}

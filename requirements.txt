@@ -1,7 +1,3 @@
 praw
-moviepy
-python_dotenv
-html2image
-gTTS
-bs4
 flask
+selenium
