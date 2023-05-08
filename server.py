@@ -35,7 +35,7 @@ def make():
         if video_content is None:
             raise Exception("Error in getting post data")
         print(video_content.path)
-        return render_template('make.html', video_content=video_content, submission_id=video_content.submission_id)
+        return render_template('make.html', video_content=video_content)
     except Exception as e:
         abort(404, e)
 

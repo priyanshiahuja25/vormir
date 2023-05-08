@@ -6,4 +6,4 @@ class Comment:
         self.score = score
 
     def __str__(self):
-        return self.body
+        return f"{self.comment_id} - {self.body}"

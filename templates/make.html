@@ -4,6 +4,11 @@
 {% endblock %}
 
 {% block content %}
-    <h1>{{ submission_id }}</h1>
-    <p>{{ video_content }}</p>
+    <h1>{{ video_content.submission_id }}</h1>
+    <p>{{ video_content.title }}</p>
+    <ul>
+    {% for comment in video_content.comments %}
+        <li>{{ comment }}</li>
+    {% endfor %}
+    </ul>
 {% endblock %}
