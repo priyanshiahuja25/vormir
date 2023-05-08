@@ -1,3 +1,4 @@
 praw
 flask
 selenium
+python-dotenv
