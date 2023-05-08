@@ -1,6 +1,10 @@
 from src.comment import Comment
 import os
 
+from selenium import webdriver
+from selenium.webdriver import Keys
+import time
+
 
 class VideoContent:
     def __init__(self, title, url, username, submission_id, score):
@@ -20,6 +24,39 @@ class VideoContent:
             print("Invalid Object Type, Should Be Of Type Comment")
             return False
 
+    def make_images(self):
+        driver = webdriver.Firefox()
+        try:
+            driver.get("https://www.reddit.com/login")
+            username_field = driver.find_element("css selector", "#loginUsername")
+            password_field = driver.find_element("css selector", "#loginPassword")
+
+            # enter your login credentials
+            username_field.send_keys("Broken-Back-16")
+            password_field.send_keys("@Uday1601")
+
+            # submit the login form
+            password_field.send_keys(Keys.RETURN)
+
+            time.sleep(5)
+        except Exception as e:
+            print(e)
+            # quit the driver only if there is an error
+            driver.quit()
+        else:
+            driver.get(self.url)
+            post_title = driver.find_element(value="t3_"+self.submission_id)
+            post_title.screenshot(os.path.join(self.path, 'title.png'))
+
+            # driver.get(self.url+"?sort=top")
+            # for comment in self.comments:
+            time.sleep(5)
+            ele = driver.find_element('css selector', ".t1_ed1emmi")
+            ele.screenshot(os.path.join(self.path, self.comments[0].comment_id+".png"))
+
+        finally:
+            driver.quit()
+
     @staticmethod
     def make_folder(submission_id):
         i = 0
@@ -38,3 +75,6 @@ class VideoContent:
 
     def __str__(self):
         return f"{self.title} \n- Comments {len(self.comments)}"
+
+
+

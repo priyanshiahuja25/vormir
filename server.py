@@ -34,7 +34,7 @@ def make():
         video_content = get_reddit_data(request.args.get('url'))
         if video_content is None:
             raise Exception("Error in getting post data")
-        print(video_content.path)
+        video_content.make_images()
         return render_template('make.html', video_content=video_content)
     except Exception as e:
         abort(404, e)
