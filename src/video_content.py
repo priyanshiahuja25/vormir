@@ -51,7 +51,7 @@ class VideoContent:
             driver.get(self.url+"?sort=top")
             for comment in self.comments:
                 try:
-                    ele = driver.find_element('css selector', ".Comment.t1_"+comment.comment_id)
+                    ele = driver.find_element('css selector', f".Comment.t1_{comment.comment_id}._1z5rdmX8TDr6mqwNv7A70U")
                     ele.screenshot(os.path.join(self.path, self.comments[0].comment_id+".png"))
                 except Exception as e:
                     print(e)
