@@ -48,12 +48,13 @@ class VideoContent:
             post_title = driver.find_element(value="t3_"+self.submission_id)
             post_title.screenshot(os.path.join(self.path, 'title.png'))
 
-            # driver.get(self.url+"?sort=top")
-            # for comment in self.comments:
-            time.sleep(5)
-            ele = driver.find_element('css selector', ".t1_ed1emmi")
-            ele.screenshot(os.path.join(self.path, self.comments[0].comment_id+".png"))
-
+            driver.get(self.url+"?sort=top")
+            for comment in self.comments:
+                try:
+                    ele = driver.find_element('css selector', ".Comment.t1_"+comment.comment_id)
+                    ele.screenshot(os.path.join(self.path, self.comments[0].comment_id+".png"))
+                except Exception as e:
+                    print(e)
         finally:
             driver.quit()
 
