@@ -5,7 +5,7 @@
 
 {% block content %}
     <h1>{{ video_content.submission_id }}</h1>
-    <p>{{ video_content.title }}</p>
+    <p>{{ video_content.url }}</p>
     <ul>
     {% for comment in video_content.comments %}
         <li>{{ comment }}</li>
