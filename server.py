@@ -1,6 +1,5 @@
 # Imports
 from flask import Flask, request, render_template, abort
-import praw
 import os
 from dotenv import load_dotenv
 
@@ -13,14 +12,6 @@ app = Flask(__name__)
 
 load_dotenv()
 
-# Instantiating a reddit instance using .env file details
-# reddit = praw.Reddit(
-#     client_id=os.environ['CLIENT'],
-#     client_secret=os.environ['SECRET'],
-#     user_agent=os.environ['USER_AGENT']
-# )
-
-
 @app.route('/')
 def hello_world():
     """Homepage Route; as of now its only purpose is url taking"""
@@ -32,7 +23,7 @@ def make():
     """MakeVideo Route; video starts being made"""
     try:
         id_index = request.args.get('url').find('/comments/')
-        submission_id = request.args.get('url')[id_index+10:id_index+17]
+        submission_id = request.args.get('url')[id_index+10:id_index+16]
         video_content = VideoContent(submission_id=submission_id, url=request.args.get('url'))
 
         video_content.make_images()

@@ -1,9 +1,8 @@
 class Comment:
-    def __init__(self, comment_id, username, body, score):
+    def __init__(self, comment_id, path, body):
         self.comment_id = comment_id
-        self.username = username
         self.body = body
-        self.score = score
+        self.path = path
 
     def __str__(self):
         return f"{self.comment_id} - {self.body}"

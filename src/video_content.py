@@ -1,10 +1,16 @@
 from src.comment import Comment
 import os
-
+import praw
 from selenium import webdriver
 from selenium.webdriver import Keys
 import time
 
+# Instantiating a reddit instance using .env file details
+reddit = praw.Reddit(
+    client_id=os.environ['CLIENT'],
+    client_secret=os.environ['SECRET'],
+    user_agent=os.environ['USER_AGENT']
+)
 
 class VideoContent:
     def __init__(self, url, submission_id):
@@ -46,7 +52,11 @@ class VideoContent:
             for comment in comments:
                 comment_id = comment.get_attribute("class").split()[1][3:]
                 comment.screenshot(os.path.join(self.path, f'{comment_id}.png'))
-                self.comments.append(comment_id)
+                comment_content = reddit.comment(comment_id)
+                new_comment = Comment(comment_id=comment_id, path=os.path.join(self.path, f'{comment_id}.png'),
+                                      body=comment_content.body)
+
+                self.comments.append(new_comment)
 
         finally:
             driver.quit()
