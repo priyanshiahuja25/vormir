@@ -2,6 +2,5 @@ praw
 flask
 selenium
 python-dotenv
-Pillow
-pytesseract
 gtts
+moviepy
