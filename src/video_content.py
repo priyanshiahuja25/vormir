@@ -1,31 +1,30 @@
 from src.comment import Comment
 import os
-
+import praw
 from selenium import webdriver
 from selenium.webdriver import Keys
 import time
 
+# Instantiating a reddit instance using .env file details
+reddit = praw.Reddit(
+    client_id=os.environ['CLIENT'],
+    client_secret=os.environ['SECRET'],
+    user_agent=os.environ['USER_AGENT']
+)
 
 class VideoContent:
-    def __init__(self, title, url, username, submission_id, score):
+    def __init__(self, url, submission_id):
         self.url = url
         self.submission_id = submission_id
-        self.username = username
-        self.title = title
         self.comments = []
-        self.score = score
         self.path = VideoContent.make_folder(submission_id)
 
-    def add_comment(self, comment):
-        if isinstance(comment, Comment):
-            self.comments.append(comment)
-            return True
-        else:
-            print("Invalid Object Type, Should Be Of Type Comment")
-            return False
-
     def make_images(self):
-        driver = webdriver.Firefox()
+        try:
+            driver = webdriver.Chrome()
+        except:
+            driver = webdriver.Firefox()
+
         try:
             driver.get("https://www.reddit.com/login")
             username_field = driver.find_element("css selector", "#loginUsername")
@@ -45,16 +44,18 @@ class VideoContent:
             driver.quit()
         else:
             driver.get(self.url)
-            post_title = driver.find_element(value="t3_"+self.submission_id)
+            post_title = driver.find_element('css selector', '.Post')
             post_title.screenshot(os.path.join(self.path, 'title.png'))
+            driver.get(self.url + "?sort=top")
+            comments = driver.find_elements('css selector', ".Comment")[:5]
+            for comment in comments:
+                comment_id = comment.get_attribute("class").split()[1][3:]
+                comment.screenshot(os.path.join(self.path, f'{comment_id}.png'))
+                comment_content = reddit.comment(comment_id)
+                new_comment = Comment(comment_id=comment_id, path=os.path.join(self.path, f'{comment_id}.png'),
+                                      body=comment_content.body)
 
-            driver.get(self.url+"?sort=top")
-            for comment in self.comments:
-                try:
-                    ele = driver.find_element('css selector', f".Comment.t1_{comment.comment_id}._1z5rdmX8TDr6mqwNv7A70U")
-                    ele.screenshot(os.path.join(self.path, self.comments[0].comment_id+".png"))
-                except Exception as e:
-                    print(e)
+                self.comments.append(new_comment)
         finally:
             driver.quit()
 
@@ -76,6 +77,3 @@ class VideoContent:
 
     def __str__(self):
         return f"{self.title} \n- Comments {len(self.comments)}"
-
-
-
